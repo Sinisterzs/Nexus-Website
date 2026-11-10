@@ -1,12 +1,13 @@
 ---
 const links = [['Início','inicio'],['Recursos','recursos'],['Aplicativo','aplicativo'],['Tecnologia','tecnologia'],['Download','download']];
+const homePrefix = Astro.url.pathname === '/' ? '' : '/';
 ---
 <header class="header"><div class="nav-wrap">
-  <a class="wordmark" href="#inicio" aria-label="NEXUS início"><span class="brand-symbol">N</span>NEXUS</a>
-  <nav aria-label="Navegação principal" class="desktop-nav">{links.map(([label,id])=><a href={`#${id}`}>{label}</a>)}</nav>
-  <a class="nav-cta" href="#download">Baixar NEXUS <span aria-hidden="true">↗</span></a>
+  <a class="wordmark" href={`${homePrefix}#inicio`} aria-label="NEXUS início"><span class="brand-symbol">N</span>NEXUS</a>
+  <nav aria-label="Navegação principal" class="desktop-nav">{links.map(([label,id])=><a href={`${homePrefix}#${id}`}>{label}</a>)}</nav>
+  <a class="nav-cta" href={`${homePrefix}#download`}>Baixar NEXUS <span aria-hidden="true">↗</span></a>
   <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir menu"><span></span><span></span></button>
-  <nav id="mobile-nav" aria-label="Navegação mobile" hidden>{links.map(([label,id])=><a href={`#${id}`}>{label}<span aria-hidden="true">↗</span></a>)}</nav>
+  <nav id="mobile-nav" aria-label="Navegação mobile" hidden>{links.map(([label,id])=><a href={`${homePrefix}#${id}`}>{label}<span aria-hidden="true">↗</span></a>)}</nav>
 </div></header>
 <script>
 const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle')!;

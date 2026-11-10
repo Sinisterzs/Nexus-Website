@@ -8,6 +8,7 @@ let observer: IntersectionObserver | undefined;
 let animations: ReturnType<typeof animate>[] = [];
 let generation=0;
 async function setup() {
+  if (!document.querySelector('.hero')) return;
   const current=++generation;
   lenis?.destroy();lenis=undefined;observer?.disconnect();animations.forEach(a=>a.revert());animations=[];
   hoverAnimations.forEach(a=>a.revert());hoverAnimations.clear();

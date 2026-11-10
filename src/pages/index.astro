@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
 import SignalCore from '../components/visual/SignalCore.astro';
 import Features from '../components/sections/Features.astro';
 import AppPreview from '../components/interactive/AppPreview.svelte';
@@ -20,5 +21,5 @@ import {release} from '../config/releases';
     <section id="tecnologia" class="section tech-section wrap"><div class="tech-intro"><span class="eyebrow">03 / POR TRÁS DA EXPERIÊNCIA</span><h2>Engenharia sólida.<br/><span>Conexão natural.</span></h2><p>A tecnologia cuida dos detalhes.<br/>Você cuida da conversa.</p><a href={release.repository} class="text-link" target="_blank" rel="noreferrer">Conheça o projeto no GitHub <span>↗</span></a></div><div class="tech-list">{[['RUST + TAURI 2','Feito para o desktop.','Uma base nativa para uma experiência dedicada ao Windows.'],['WEBRTC','De uma pessoa para outra.','Voz e compartilhamento de tela com conexão P2P.'],['SQLITE','Seu histórico, por perto.','Armazenamento local para suas conversas.'],['ATUALIZAÇÕES ASSINADAS','Evolução com integridade.','Assinaturas para verificar a origem das atualizações.']].map(([tag,title,desc],i)=><article data-reveal><span class="tech-number">0{i+1}</span><div><span class="tech-tag">{tag}</span><h3>{title}</h3><p>{desc}</p></div><span class="tech-plus" aria-hidden="true">+</span></article>)}</div></section>
     <section id="download" class="download-section"><div class="download-lines" aria-hidden="true"></div><div class="wrap download-inner"><span class="eyebrow"><i></i> SEU PRÓXIMO PONTO DE ENCONTRO</span><h2>PRONTO PARA<br/>SE <span>CONECTAR?</span></h2><p>Seu espaço está aqui. A próxima conversa também.</p><a class="button primary" href={release.installer}>Baixar NEXUS para Windows <span>↗</span></a><div class="download-details">v{release.version} {release.channel} <span>·</span> Windows {release.architecture} <span>·</span> <a href={release.latest}>Ver release oficial ↗</a></div></div></section>
   </main>
-  <footer class="footer wrap"><div class="footer-top"><a class="wordmark" href="#inicio"><span class="brand-symbol">N</span>NEXUS</a><p>Conecte-se. Compartilhe. Seja você.</p><div><a href={release.repository}>GitHub ↗</a><a href={release.latest}>Releases ↗</a><a href={release.changelog}>Changelog ↗</a></div></div><div class="footer-bottom"><span>© {new Date().getFullYear()} NEXUS Desktop</span><span>Um projeto em desenvolvimento contínuo.</span><span><i></i> v{release.version} / {release.channel.toUpperCase()}</span></div></footer>
+  <Footer />
 </Base>

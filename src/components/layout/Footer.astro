@@ -1,0 +1,12 @@
+---
+import {release} from '../../config/releases';
+const home = Astro.url.pathname === '/' ? '#inicio' : '/#inicio';
+---
+<footer class="footer wrap">
+  <div class="footer-top">
+    <a class="wordmark" href={home}><span class="brand-symbol">N</span>NEXUS</a>
+    <p>Conecte-se. Compartilhe. Seja você.</p>
+    <div><a href={release.repository}>GitHub ↗</a><a href={release.latest}>Releases ↗</a><a href={release.changelog}>Changelog ↗</a><a href="/privacidade/">Privacidade</a></div>
+  </div>
+  <div class="footer-bottom"><span>© {new Date().getFullYear()} NEXUS Desktop</span><span>Um projeto em desenvolvimento contínuo.</span><span><i></i> v{release.version} / {release.channel.toUpperCase()}</span></div>
+</footer>

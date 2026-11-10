@@ -78,6 +78,16 @@ Lenis é importado dinamicamente apenas com ponteiro preciso, viewport desktop e
 
 ## SITE_URL e publicação na Cloudflare Pages
 
+### Política de Privacidade em revisão
+
+A rota `/privacidade` usa a identidade visual do website e tem link no rodapé. O texto integral está em `artifacts/privacy/politica-completa.md`; fontes do código e informações ainda dependentes do responsável estão em `artifacts/privacy/RELATORIO.md`.
+
+A finalidade é disponibilizar uma URL oficial para o formulário Edge/SmartScreen, após revisão e publicação autorizada. Não é um cadastro na Microsoft Store. Não há placeholders de contato ou retenção na página.
+
+`src/config/privacy.ts` fixa a versão e o commit do NEXUS Desktop realmente auditados. Não atualize esses dados automaticamente junto com a release: alterações no tratamento de dados exigem nova análise. A implementação desta página não fez push nem deploy.
+
+### Configuração de publicação
+
 O endereço público ainda não foi definido. Sem `SITE_URL`, o build local usa `http://localhost:4321`, omite canonical público e marca a página `noindex`. Não há domínio público inventado.
 
 Na Cloudflare, **SITE_URL é obrigatório**: o build falha quando `CF_PAGES=1` e a variável está ausente. Use somente a origem completa, sem caminho ou barra extra: `https://<nome-real-do-projeto>.pages.dev`. URLs com caminho, query ou credenciais são rejeitadas. O valor alimenta canonical, Open Graph, Twitter Card, sitemap e robots.

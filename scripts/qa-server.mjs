@@ -1,7 +1,7 @@
 // Local-only QA harness. Never emitted to dist or deployed.
 // Exercises the production build with controlled browser capability failures.
 import {createServer} from 'node:http';
-import {readFileSync,existsSync} from 'node:fs';
+import {readFileSync,existsSync,statSync} from 'node:fs';
 import {resolve,extname,sep} from 'node:path';
 const root=resolve('dist');
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.woff2':'font/woff2','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.xml':'application/xml','.txt':'text/plain'};
@@ -37,6 +37,8 @@ const server=createServer((req,res)=>{
   const qa=url.pathname.match(/^\/qa\/(reduced|no-webgl|lost)$/);
   let path=resolve(root,'.'+(qa?'/index.html':url.pathname==='/'?'/index.html':decodeURIComponent(url.pathname)));
   if(!path.startsWith(root+sep)||!existsSync(path)){res.writeHead(404);res.end();return;}
+  if(statSync(path).isDirectory())path=resolve(path,'index.html');
+  if(!existsSync(path)){res.writeHead(404);res.end();return;}
   let content=readFileSync(path);
   if(qa)content=Buffer.from(content.toString().replace('<head>','<head>'+prelude(qa[1])));
   res.setHeader('Content-Type',mime[extname(path)]||'application/octet-stream');res.end(content);

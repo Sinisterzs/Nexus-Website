@@ -1,0 +1,28 @@
+/* v1.1: keep the editorial hierarchy while making secondary copy readable. */
+:root{--muted:#a1a5b0;--caption:#959ba9;--caption-accent:#d16b7c}
+.hero-topline,.hero-meta,.hero-bottom,.signal-coordinate,.section-index,.feature-top>span,.feature-tag,.tech-number,.footer-bottom{color:var(--caption)}
+.hero-topline,.hero-meta,.hero-bottom,.signal-coordinate,.section-index,.feature-tag,.tech-number,.tech-tag,.footer-bottom,.eyebrow,.release-badge{font-size:10px;letter-spacing:1px;line-height:1.6}
+.hero-topline>span:first-child{color:#c5c7cd}.hero-meta{flex-wrap:wrap;row-gap:5px}.hero-meta>span,.release-badge>span{color:var(--caption)}
+.hero-meta .meta-value,.hero-meta .meta-description{color:var(--caption)}
+.eyebrow,.tech-tag,.feature-top svg{color:var(--caption-accent)}
+.signal-coordinate.top{right:60px}.signal-coordinate.bottom{right:60px;max-width:80%;text-align:right;font-size:9px}.signal-cross{right:50px}
+.text-link,.nav-cta,.desktop-nav{font-size:12px}.text-link{min-height:40px}.desktop-nav a{padding-block:14px}
+.feature p,.section-heading>p,.tech-list p{font-size:12px}.feature-tag{gap:10px;letter-spacing:.6px}.feature-tag>span{flex-shrink:0}
+.mini-messages i{font-size:10px;color:var(--caption);line-height:1.5}
+.footer-top>div,.footer-top p,.download-details{font-size:11px}.footer-bottom{gap:20px}.footer-top>div a{padding-block:10px}.download-details{flex-wrap:wrap}
+.button:focus-visible,.nav-cta:focus-visible{outline-color:#f1a4b1;outline-offset:5px;box-shadow:0 0 0 2px var(--bg)}
+.menu-toggle{min-height:44px;min-width:44px;cursor:pointer}.menu-toggle[aria-expanded=true] span:first-child{transform:translateY(3.5px) rotate(45deg)}.menu-toggle[aria-expanded=true] span:last-child{transform:translateY(-3.5px) rotate(-45deg)}.menu-toggle span{transition:transform .2s}
+.header{transition:border-color .2s,box-shadow .2s}.header.is-scrolled{border-color:#ffffff22;box-shadow:0 8px 30px #0003}
+@media(max-width:1100px){.desktop-nav{gap:18px;font-size:11px}.nav-wrap{gap:22px}}
+@media(max-width:900px){.hero-meta{max-width:360px}.signal-coordinate{display:none}.footer-top>div{font-size:11px}}
+@media(max-width:600px){
+ .nav-wrap{gap:9px}.nav-cta{font-size:10px;padding:9px 10px;gap:9px}.menu-toggle{padding:10px}.wordmark{letter-spacing:2px}
+ .hero-topline{gap:14px;flex-wrap:wrap}.hero-topline>span{font-size:9px;letter-spacing:.6px}.hero-topline>span:nth-child(2){font-size:9px}
+ .hero-topline>span:nth-child(2){display:none}.release-badge{font-size:9px;gap:7px;letter-spacing:.7px}
+ .hero-meta{font-size:10px;letter-spacing:.2px;gap:6px 9px;max-width:285px}.hero-meta .meta-description{flex-basis:100%}.hero-meta .meta-separator{display:none}
+ .hero-content{min-height:790px}.hero-copy{padding-top:40px}.hero-copy>p{font-size:13px}.hero-actions{gap:16px}.hero-actions .button,.hero-actions .text-link{font-size:10px}.hero-actions .button{padding-inline:12px}
+ .hero-bottom,.hero-bottom>a{font-size:9px;letter-spacing:.35px}.hero-bottom{gap:12px}.signal-status{font-size:8px;gap:5px;white-space:nowrap}
+ .eyebrow,.section-index,.tech-tag,.tech-number{font-size:10px}.section-heading>p{font-size:12px}.feature p{font-size:12px}.feature-voice>p{font-size:12px}.feature-screen p,.feature-themes p{font-size:12px}
+ .feature-tag{font-size:9px;letter-spacing:.3px;min-height:47px}.feature-screen .feature-tag{align-items:flex-start}.principles>.wrap{font-size:9px;letter-spacing:.6px;gap:12px}.principles span{max-width:42%;text-align:center}
+ .tech-list p,.tech-intro>p{font-size:12px}.download-inner .eyebrow{font-size:9px;letter-spacing:.6px}.download-inner p{font-size:12px}.download-details{font-size:10px;gap:6px 10px}.footer-top{gap:20px}.footer-top>div{gap:16px;font-size:11px}.footer-bottom{font-size:10px;gap:14px}
+}

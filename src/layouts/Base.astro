@@ -1,0 +1,30 @@
+---
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import '../styles/polish.css';
+const url = new URL(Astro.url.pathname, Astro.site);
+const published = Astro.site?.hostname !== 'localhost';
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NEXUS Desktop — Sua conexão. Seu espaço.</title>
+    <meta name="description" content="Mensagens, chamadas de voz e compartilhamento de tela. Conheça o NEXUS Desktop e baixe a versão Stable para Windows." />
+    <meta name="theme-color" content="#090A0D" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {published ? <link rel="canonical" href={url} /> : <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content="website" /><meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="NEXUS Desktop — Sua conexão. Seu espaço." />
+    <meta property="og:description" content="Um espaço para conversar, compartilhar e estar perto. Disponível para Windows." />
+    {published && <meta property="og:url" content={url} />}<meta property="og:image" content={new URL('/assets/og.png', Astro.site)} />
+    <meta property="og:image:type" content="image/png" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="NEXUS — Sua conexão. Seu espaço. Desktop para Windows." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NEXUS Desktop — Sua conexão. Seu espaço." />
+    <meta name="twitter:description" content="Mensagens, chamadas de voz e compartilhamento de tela no seu desktop." />
+    <meta name="twitter:image" content={new URL('/assets/og.png', Astro.site)} />
+    <meta name="twitter:image:alt" content="NEXUS — Sua conexão. Seu espaço." />
+  </head>
+  <body><a class="skip" href="#conteudo">Pular para o conteúdo</a><slot /><script>import '../lib/motion';</script></body>
+</html>

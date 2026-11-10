@@ -1,0 +1,23 @@
+---
+const links = [['Início','inicio'],['Recursos','recursos'],['Aplicativo','aplicativo'],['Tecnologia','tecnologia'],['Download','download']];
+---
+<header class="header"><div class="nav-wrap">
+  <a class="wordmark" href="#inicio" aria-label="NEXUS início"><span class="brand-symbol">N</span>NEXUS</a>
+  <nav aria-label="Navegação principal" class="desktop-nav">{links.map(([label,id])=><a href={`#${id}`}>{label}</a>)}</nav>
+  <a class="nav-cta" href="#download">Baixar NEXUS <span aria-hidden="true">↗</span></a>
+  <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir menu"><span></span><span></span></button>
+  <nav id="mobile-nav" aria-label="Navegação mobile" hidden>{links.map(([label,id])=><a href={`#${id}`}>{label}<span aria-hidden="true">↗</span></a>)}</nav>
+</div></header>
+<script>
+const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle')!;
+const menu = document.querySelector<HTMLElement>('#mobile-nav')!;
+function close() {menu.hidden=true;toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Abrir menu');}
+toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Fechar menu':'Abrir menu');menu.hidden=!open;});
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!menu.hidden){close();toggle.focus();}});
+matchMedia('(min-width: 901px)').addEventListener('change',e=>{if(e.matches)close();});
+document.addEventListener('click',e=>{if(!menu.hidden && e.target instanceof Node && !document.querySelector('.nav-wrap')?.contains(e.target))close();});
+const header=document.querySelector('.header')!;
+const updateHeader=()=>header.classList.toggle('is-scrolled',window.scrollY>16);
+window.addEventListener('scroll',updateHeader,{passive:true});updateHeader();
+</script>

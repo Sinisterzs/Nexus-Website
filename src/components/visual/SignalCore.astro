@@ -1,0 +1,8 @@
+<div class="signal" aria-hidden="true">
+  <div class="signal-fallback">{Array.from({length:20},(_,i)=><i style={`--i:${i}`}></i>)}</div>
+  <div class="signal-canvas" id="signal-canvas"></div>
+  <span class="signal-coordinate top">SC—001 / LIVE SIGNAL</span>
+  <span class="signal-coordinate bottom">CONNECTION WITHOUT THE NOISE.</span>
+  <span class="signal-cross">+</span>
+</div>
+<script>import { mountSignal } from '../../lib/signal'; mountSignal(document.querySelector<HTMLElement>('#signal-canvas')!);</script>

@@ -1,0 +1,23 @@
+[
+  {
+    "filter": "none",
+    "loaded": true,
+    "panel": "01Home",
+    "src": "http://127.0.0.1:4323/screenshots/optimized/nexus-home-1920.webp",
+    "theme": "NEXUS Dark✓"
+  },
+  {
+    "filter": "none",
+    "loaded": true,
+    "panel": "01Home",
+    "src": "http://127.0.0.1:4323/screenshots/optimized/nexus-midnight-1920.webp",
+    "theme": "Midnight Black✓"
+  },
+  {
+    "filter": "none",
+    "loaded": true,
+    "panel": "01Home",
+    "src": "http://127.0.0.1:4323/screenshots/optimized/nexus-cyber-1920.webp",
+    "theme": "Cyber Slate✓"
+  }
+]

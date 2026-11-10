@@ -1,44 +1,112 @@
 <script lang="ts">
   import { animate } from 'animejs';
-  import { onDestroy, onMount } from 'svelte';
-  let transition: ReturnType<typeof animate> | undefined;
-  onDestroy(()=>transition?.revert());
-  onMount(()=>{const media=matchMedia('(prefers-reduced-motion: reduce)');const stop=()=>{if(media.matches)transition?.revert();};media.addEventListener('change',stop);return ()=>media.removeEventListener('change',stop);});
-  function transitionPreview(){transition?.revert();if(preview&&!matchMedia('(prefers-reduced-motion: reduce)').matches)transition=animate(preview,{opacity:[.75,1],duration:260,ease:'outQuad'});}
-  function selectView(next:string){if(view===next)return;view=next;transitionPreview();}
+  import { onDestroy, onMount, tick } from 'svelte';
+  import { screenshots, themeScreenshots } from '../../config/screenshots';
+
+  let view = $state(0);
   let theme = $state(0);
-  let view = $state('Mensagens');
-  let preview: HTMLDivElement;
-  const themes = [{name:'NEXUS Dark',color:'#b8495a',bg:'#111318'}, {name:'Midnight Black',color:'#6187ff',bg:'#0a0c12'}, {name:'Cyber Slate',color:'#45bdcc',bg:'#151f28'}];
-  let current = $derived(themes[theme]);
-  function select(index:number){ if(theme===index)return;theme=index;transitionPreview(); }
+  let selected = $derived(screenshots[view]);
+  let selectedTheme = $derived(themeScreenshots[theme]);
+  let asset = $derived(view === 0 ? selectedTheme.asset : selected.asset);
+  let alt = $derived(view === 0 ? selectedTheme.alt : selected.alt);
+  let themeName = $derived(view === 0 ? selectedTheme.label : themeScreenshots.find(item => item.id === selected.theme)?.label);
+  let loading = $state(true);
+  let failed = $state(false);
+  let reduced = $state(false);
+  let image: HTMLImageElement | undefined;
+  let animation: ReturnType<typeof animate> | undefined;
+  let request = 0;
+
+  onMount(() => {
+    const media = matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => { reduced = media.matches; if (reduced) animation?.revert(); };
+    update(); media.addEventListener('change', update);
+    if (image?.complete && image.naturalWidth > 0) loading = false;
+    return () => media.removeEventListener('change', update);
+  });
+  onDestroy(() => { request++; animation?.revert(); });
+
+  async function choose(nextView: number, nextTheme = theme) {
+    if (nextView === view && nextTheme === theme) return;
+    const current = ++request;
+    animation?.revert();
+    view = nextView; theme = nextTheme; failed = false; loading = true;
+    await tick();
+    if (current === request && image?.complete && image.naturalWidth > 0) ready();
+  }
+
+  function ready() {
+    loading = false; failed = false;
+    animation?.revert();
+    if (image && !reduced && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      animation = animate(image, {opacity:[.55,1],duration:300,ease:'outQuad'});
+    }
+  }
+
+  function navigate(event: KeyboardEvent, index: number) {
+    const moves: Record<string,number> = {ArrowRight:(index+1)%screenshots.length,ArrowLeft:(index+screenshots.length-1)%screenshots.length,Home:0,End:screenshots.length-1};
+    const next = moves[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    const group = event.currentTarget instanceof HTMLElement ? event.currentTarget.parentElement : null;
+    void choose(next);
+    group?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus();
+  }
 </script>
 
 <div class="preview-controls">
-  <div class="theme-options" role="group" aria-label="Tema da demonstração">
-    {#each themes as item,i}<button class:chosen={theme===i} onclick={()=>select(i)} aria-pressed={theme===i}><i style:background={item.color}></i>{item.name}<span aria-hidden="true">{theme===i?'✓':''}</span></button>{/each}
+  <div class="theme-options" role="group" aria-label="Temas da Home">
+    {#each themeScreenshots as item, i}
+      <button class:chosen={view === 0 && theme === i} onclick={() => choose(0, i)} aria-pressed={view === 0 && theme === i}>
+        <i style:background={item.color} aria-hidden="true"></i>{item.label}<span aria-hidden="true">{view === 0 && theme === i ? '✓' : ''}</span>
+      </button>
+    {/each}
   </div>
   <span class="preview-hint">TRÊS TEMAS. A SUA IDENTIDADE.</span>
 </div>
-<!-- Mockup ilustrativo. Substituir este componente por capturas reais quando disponíveis. -->
-<div class="app-window" bind:this={preview} style={`--theme:${current.color};--app-bg:${current.bg}`} aria-label={`Demonstração ilustrativa da NEXUS UI 2.0 no tema ${current.name}`}>
-  <div class="titlebar"><span class="mini-brand">N NEXUS</span><span>NEXUS UI 2.0</span><span aria-hidden="true">— &nbsp; □ &nbsp; ×</span></div>
-  <div class="app-body">
-    <aside class="app-rail"><span class="rail-logo">N</span>{#each ['Home','Mensagens','Personalização'] as tab}<button class:active={view===tab} onclick={()=>selectView(tab)} aria-label={tab} title={tab} aria-pressed={view===tab}>{tab==='Home'?'⌂':tab==='Mensagens'?'▤':'◈'}</button>{/each}<span class="rail-bottom">KS</span></aside>
-    <aside class="conversation-list"><div class="list-title">Seu espaço <span>+</span></div><div class="mock-search">⌕ &nbsp; Encontrar uma conversa</div><p class="list-label">MENSAGENS DIRETAS <span>03</span></p><div class="contact selected"><span class="avatar rose">JL<i></i></span><div>Julia Lima<small>Você: Combinado! Até lá ✨</small></div><time>agora</time></div><div class="contact"><span class="avatar blue">RC<i></i></span><div>Rafael Costa<small>Bora uma chamada mais tarde?</small></div></div><div class="contact"><span class="avatar green">BM</span><div>Beatriz Martins<small>Valeu por compartilhar!</small></div></div><div class="user-profile"><span class="avatar">KS</span><span>Seu perfil<small><i></i> Disponível</small></span><span>⚙</span></div></aside>
-    <div class="chat-area">
-      <div class="chat-top"><span class="avatar rose">JL</span><div>Julia Lima<small>Disponível para conversar</small></div><span class="chat-icons" aria-hidden="true">♧ &nbsp; ▱ &nbsp; ···</span></div>
-      {#if view==='Home'}<div class="home-demo"><span class="eyebrow">BEM-VINDO AO SEU ESPAÇO</span><h3>Bom ter você<br/>por aqui.</h3><p>Uma conversa pode mudar o seu dia.</p><button onclick={()=>selectView('Mensagens')}>Abrir mensagens ↗</button></div>
-      {:else if view==='Personalização'}<div class="home-demo"><span class="eyebrow">DO SEU JEITO</span><h3>O seu espaço.<br/>A sua identidade.</h3><p>Experimente os três temas acima.</p><div class="demo-swatches">{#each themes as item,i}<button onclick={()=>select(i)} aria-label={`Selecionar ${item.name}`} aria-pressed={theme===i} style:background={item.color}>{theme===i?'✓':''}</button>{/each}</div></div>
-      {:else}<div class="messages"><span class="date-separator">HOJE</span><div class="message"><span class="avatar rose">JL</span><div><strong>Julia Lima <time>14:32</time></strong><p>Ei! Já testou o novo NEXUS?</p><p>A interface ficou incrível.</p></div></div><div class="message own"><div><strong>Você <time>14:33</time></strong><p>Sim! E esse tema escuro? Muito bom.</p></div><span class="avatar">KS</span></div><div class="message"><span class="avatar rose">JL</span><div><strong>Julia Lima <time>14:34</time></strong><p>Vamos fazer uma chamada depois?<br/>Quero te mostrar uma coisa 👀</p></div></div><div class="message own"><div><strong>Você <time>14:34</time></strong><p>Combinado! Até lá ✨</p></div><span class="avatar">KS</span></div></div><div class="compose"><span>+ &nbsp; Escreva sua mensagem...</span><span aria-hidden="true">☺ &nbsp; <b>↗</b></span></div><div class="chat-foot">Uma boa conversa começa com um oi.</div>{/if}
-    </div>
+
+<div class="preview-navigation" role="tablist" aria-label="Telas do NEXUS Desktop">
+  {#each screenshots as item, i}
+    <button id={`preview-tab-${item.id}`} role="tab" aria-selected={view === i} aria-controls="preview-panel" tabindex={view === i ? 0 : -1} onclick={() => choose(i)} onkeydown={event => navigate(event, i)}>
+      <span class="tab-number" aria-hidden="true">0{i+1}</span>{item.label}{#if !item.asset}<i class="pending-dot" aria-hidden="true"></i>{/if}
+    </button>
+  {/each}
+</div>
+
+<div class="app-window" role="tabpanel" id="preview-panel" aria-labelledby={`preview-tab-${selected.id}`} tabindex="0">
+  <div class="titlebar"><span class="mini-brand"><i aria-hidden="true"></i>NEXUS DESKTOP</span><span>{selected.label}</span><span class="capture-label">{asset ? 'CAPTURA REAL' : 'CAPTURA PENDENTE'}</span></div>
+  <div class="image-stage" aria-busy={!!asset && loading && !failed}>
+    {#if asset}
+      {#key asset.src}
+        <picture>
+          <source type="image/webp" srcset={`${asset.smallWebp} 960w, ${asset.webp} 1920w`} sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), (max-width: 1432px) calc(100vw - 112px), 1320px" />
+          <img bind:this={image} src={asset.src} {alt} width={asset.width} height={asset.height} loading="lazy" decoding="async" onload={ready} onerror={() => { loading = false; failed = true; }} class:failed />
+        </picture>
+      {/key}
+      {#if loading && !failed}<span class="image-status" role="status">Carregando captura…</span>{/if}
+      {#if failed}<div class="missing-state" role="status"><h3>Não foi possível carregar a captura.</h3><p>Abra o PNG original pelo link abaixo.</p></div>{/if}
+    {:else}
+      <div class="missing-state">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M11 5 6 10c-3 5 2 14 9 21s16 12 21 9l5-5-9-9-5 4c-5-2-10-7-12-12l4-5z" transform="translate(0 -2) scale(.85)" /></svg>
+        <span class="pending-label">CHAMADAS / CAPTURA PENDENTE</span><h3>Uma conversa vai além do texto.</h3><p>A captura real desta tela ainda não está disponível.</p>
+      </div>
+    {/if}
   </div>
 </div>
-<div class="preview-caption"><span><i></i> {current.name} <span class="caption-divider">/</span> Interface escura, por natureza.</span><span>Prévia ilustrativa · Explore os temas e as abas</span></div>
+
+<div class="preview-caption">
+  <span class="current-caption" aria-live="polite" aria-atomic="true"><i class:pending={!asset}></i>{selected.label}{#if themeName}<span class="caption-divider">/</span>{themeName}{/if}</span>
+  {#if asset}<a href={asset.src} target="_blank" rel="noreferrer" aria-label={`Ver captura de ${selected.label} em tamanho original (abre nova aba)`}>Ver em tamanho original <span aria-hidden="true">↗</span></a>{:else}<span>Imagem de Chamadas ainda não fornecida.</span>{/if}
+</div>
+<p class="preview-note">Explore os temas na Home. As demais telas preservam a aparência das capturas originais.</p>
 
 <style>
- .preview-controls{display:flex;justify-content:space-between;align-items:center;margin:36px 0 24px;gap:20px}.theme-options{display:flex;gap:8px;flex-wrap:wrap}.theme-options button{display:flex;align-items:center;gap:10px;background:transparent;color:#9296a3;border:1px solid #ffffff12;padding:12px 16px;border-radius:6px;font-size:12px;cursor:pointer}.theme-options button.chosen{background:#1b1e25;border-color:#ffffff30;color:#f5f5f7}.theme-options i{width:7px;height:7px;border-radius:50%}.theme-options button span{width:10px}.preview-hint{font-size:10px;letter-spacing:1.8px;color:#969ba8}.app-window{border:1px solid #ffffff22;border-radius:10px;overflow:hidden;background:var(--app-bg);box-shadow:0 40px 120px #0006;font-size:12px;transition:background .3s}.titlebar{height:43px;display:flex;justify-content:space-between;align-items:center;padding:0 20px;border-bottom:1px solid #ffffff09;color:#969ba8;font-size:10px}.mini-brand{letter-spacing:3px;color:#d8d9dd;font-weight:700}.app-body{display:grid;grid-template-columns:65px 265px 1fr;min-height:490px}.app-rail{display:flex;align-items:center;flex-direction:column;border-right:1px solid #ffffff09;gap:15px;padding:18px 0;background:#0002}.rail-logo{color:var(--theme);font-family:var(--display);font-size:24px;font-weight:700;margin-bottom:15px}.app-rail button{border:0;width:36px;height:36px;border-radius:7px;background:none;color:#747984;font-size:23px;cursor:pointer}.app-rail button.active{background:color-mix(in srgb,var(--theme) 15%,transparent);color:var(--theme)}.rail-bottom{margin-top:auto;background:#252934;border-radius:50%;padding:9px;font-size:10px}.conversation-list{position:relative;border-right:1px solid #ffffff09;padding:25px 15px}.list-title{font-weight:600;display:flex;justify-content:space-between;padding:0 6px}.list-title span{color:#9296a3}.mock-search{background:#ffffff04;border:1px solid #ffffff08;color:#969ba8;font-size:10px;padding:11px;border-radius:5px;margin:23px 0}.list-label{font-size:10px;letter-spacing:1px;color:#747984;display:flex;justify-content:space-between;padding:0 6px}.contact{display:flex;align-items:center;gap:10px;padding:15px 8px;border-radius:5px;position:relative}.contact.selected{background:color-mix(in srgb,var(--theme) 10%,transparent)}.avatar{display:inline-grid;place-items:center;flex-shrink:0;width:33px;height:33px;font-size:10px;border-radius:50%;color:#b7b8c4;background:#282b37;position:relative}.avatar.rose{color:#e1b2bb;background:#53333f}.avatar.blue{color:#aeb8df;background:#2c354d}.avatar.green{color:#b1ccc7;background:#2e4440}.avatar i,.user-profile small i{background:#70a68c;width:6px;height:6px;border-radius:50%;border:2px solid var(--app-bg);position:absolute;bottom:0;right:0}.contact small,.user-profile small{display:block;color:#777c89;font-size:10px;margin-top:6px}.contact time{position:absolute;right:8px;top:12px;font-size:10px;color:#969ba8}.user-profile{position:absolute;bottom:20px;left:20px;right:20px;display:flex;align-items:center;gap:10px}.user-profile>span:last-child{margin-left:auto;color:#777c89}.user-profile small i{position:static;display:inline-block;border:0;width:4px;height:4px;margin-right:4px}.chat-area{min-width:0;display:flex;flex-direction:column}.chat-top{display:flex;align-items:center;padding:17px 25px;gap:10px;border-bottom:1px solid #ffffff09}.chat-top small{display:block;font-size:10px;color:#777c89;margin-top:5px}.chat-icons{margin-left:auto;color:#9296a3;font-size:17px}.messages{padding:20px 30px;flex:1}.date-separator{display:block;text-align:center;font-size:10px;letter-spacing:2px;color:#969ba8;margin-bottom:24px}.message{display:flex;gap:10px;margin:18px 0}.message strong{font-size:10px;font-weight:500}.message time{font-size:10px;font-weight:400;color:#969ba8;margin-left:7px}.message p{background:#ffffff05;border:1px solid #ffffff04;color:#b9bcc5;padding:10px 13px;margin:6px 0 0;border-radius:0 7px 7px;font-size:11px;line-height:1.6}.message.own{justify-content:flex-end}.own strong{display:block;text-align:right}.own p{background:color-mix(in srgb,var(--theme) 16%,transparent);border-color:color-mix(in srgb,var(--theme) 15%,transparent);border-radius:7px 0 7px 7px}.compose{display:flex;justify-content:space-between;align-items:center;border:1px solid #ffffff0d;border-radius:5px;padding:12px;margin:0 25px;color:#717684;font-size:10px}.compose b{display:inline-block;padding:5px 8px;background:var(--theme);color:white;border-radius:3px;font-size:14px}.chat-foot{font-size:10px;color:#969ba8;text-align:center;padding:12px}.preview-caption{display:flex;justify-content:space-between;margin-top:20px;font-size:10px;color:#969ba8;gap:15px}.preview-caption i{display:inline-block;width:5px;height:5px;background:#70a68c;border-radius:50%;margin-right:7px}.caption-divider{margin:0 10px;color:#444}.home-demo{padding:60px 35px}.home-demo h3{font-family:var(--display);font-size:40px;letter-spacing:-2px;line-height:1.1;margin:20px 0}.home-demo p{color:#9296a3}.home-demo button{background:var(--theme);border:0;color:white;padding:13px 18px;border-radius:5px;cursor:pointer;margin-top:20px}.home-demo .eyebrow{color:var(--theme);font-size:10px;letter-spacing:2px}.demo-swatches{display:flex;gap:10px}.demo-swatches button{width:45px;height:45px;padding:0}
- @media(max-width:900px){.preview-hint{display:none}.app-body{grid-template-columns:55px 210px 1fr}.messages{padding:18px}.chat-top{padding:15px}.contact{gap:7px}.preview-caption{flex-wrap:wrap}}
- @media(max-width:650px){.app-body{grid-template-columns:45px 1fr;min-height:480px}.conversation-list{display:none}.titlebar{padding:0 12px}.theme-options{gap:5px}.theme-options button{font-size:10px;padding:10px 9px;gap:6px}.theme-options button span{display:none}.preview-controls{margin-top:25px}.app-rail button{width:30px}.messages{padding:14px}.message p{font-size:10px;padding:8px}.message .avatar{width:25px;height:25px;font-size:10px}.message{gap:6px}.chat-top{padding:13px}.compose{margin:0 12px}.preview-caption{font-size:10px}.home-demo{padding:50px 20px}.home-demo h3{font-size:32px}}
-.contact>div{min-width:0}.contact small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.contact time{display:none}.preview-caption{line-height:1.7}.theme-options button{min-height:42px}.app-rail button{min-height:36px}.chat-foot{color:#969ba8}.caption-divider{color:#9296a3}@media(max-width:650px){.preview-caption{font-size:10px}.titlebar{font-size:10px}.theme-options button{font-size:10px}.theme-options{gap:7px}.preview-controls{align-items:flex-start}.message time{font-size:10px}}
+  .preview-controls{display:flex;justify-content:space-between;align-items:center;gap:20px;margin:36px 0 24px}.theme-options{display:flex;flex-wrap:wrap;gap:8px}.theme-options button{display:flex;align-items:center;gap:10px;padding:12px 16px;min-height:44px;border:1px solid #ffffff18;border-radius:6px;background:transparent;color:var(--muted);font-size:12px;cursor:pointer;transition:background .2s,border-color .2s}.theme-options button:hover{background:#ffffff05;border-color:#ffffff35}.theme-options button.chosen{background:var(--raised);border-color:#ffffff38;color:var(--text)}.theme-options i{width:7px;height:7px;border-radius:50%;flex-shrink:0}.theme-options button span{width:10px}.preview-hint{font-size:10px;letter-spacing:1.8px;color:var(--muted)}
+  .preview-navigation{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--line);padding-bottom:12px}.preview-navigation button{display:flex;align-items:center;gap:9px;background:none;color:var(--muted);border:1px solid transparent;border-radius:5px;padding:12px 16px;min-height:44px;cursor:pointer;font-size:12px;transition:color .2s,background .2s,border-color .2s}.preview-navigation button:hover{color:var(--text);background:#ffffff05}.preview-navigation button[aria-selected=true]{background:#b8495a12;border-color:#b8495a45;color:var(--text)}.tab-number{font-size:10px;color:var(--muted)}.pending-dot{width:4px;height:4px;border:1px solid var(--muted);border-radius:50%;margin-left:2px}
+  .app-window{border:1px solid #ffffff24;border-radius:10px;background:#0b0d11;box-shadow:0 35px 100px #0005;overflow:hidden}.titlebar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:43px;padding:0 20px;border-bottom:1px solid var(--line);color:var(--muted);font-size:10px}.mini-brand{display:flex;align-items:center;gap:8px;color:#d8d9dd;font-weight:600;letter-spacing:1.8px}.mini-brand i{width:5px;height:5px;background:var(--accent);border-radius:50%}.capture-label{font-size:9px;letter-spacing:1.3px}
+  .image-stage{position:relative;width:100%;aspect-ratio:1920/1045;background:#080a0e;isolation:isolate}.image-stage picture{display:block;width:100%;height:100%}.image-stage img{display:block;width:100%;height:100%;object-fit:contain;filter:none}.image-stage img.failed{visibility:hidden}.image-status{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);padding:8px 12px;background:#111318ed;border:1px solid var(--line);border-radius:4px;color:var(--muted);font-size:11px;white-space:nowrap}.missing-state{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px;background:radial-gradient(ellipse at center,#b8495a08,transparent 65%)}.missing-state svg{width:36px;height:36px;color:var(--accent);margin-bottom:24px}.pending-label{font-size:10px;letter-spacing:1.8px;color:var(--muted)}.missing-state h3{font-family:var(--display);font-size:clamp(18px,2.4vw,32px);font-weight:500;letter-spacing:-.5px;margin:15px 0 0}.missing-state p{font-size:12px;margin:12px 0 0}
+  .preview-caption{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px;font-size:11px;line-height:1.7;color:var(--muted)}.current-caption{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.current-caption>i{width:5px;height:5px;border-radius:50%;background:#70a68c}.current-caption>i.pending{background:#9296a3}.caption-divider{color:#9296a3;margin:0 3px}.preview-caption a{padding-block:10px;display:inline-flex;gap:12px;align-items:center}.preview-caption a:hover{color:var(--text)}.preview-note{font-size:11px;line-height:1.8;margin:10px 0 0;color:var(--muted)}
+  @media(max-width:900px){.preview-hint{display:none}}
+  @media(max-width:600px){.preview-controls{margin:26px 0 18px}.theme-options{gap:6px}.theme-options button{font-size:10px;padding:10px 9px;gap:7px}.theme-options button span{display:none}.preview-navigation{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-bottom:14px}.preview-navigation button{padding:10px 12px;font-size:11px}.titlebar{padding:0 12px;height:38px;font-size:9px;gap:8px}.mini-brand{font-size:8px;letter-spacing:1px}.capture-label{font-size:8px;letter-spacing:.5px}.app-window{border-radius:7px}.preview-caption{flex-wrap:wrap;gap:3px;font-size:10px;margin-top:13px}.preview-caption a{font-size:11px}.preview-note{font-size:11px;margin-top:6px}.missing-state{padding:15px}.missing-state svg{width:23px;height:23px;margin-bottom:9px}.pending-label{font-size:8px;letter-spacing:.8px}.missing-state h3{font-size:17px;line-height:1.2;margin-top:9px}.missing-state p{font-size:10px;line-height:1.6;margin-top:8px}}
+  @media(prefers-reduced-motion:reduce){button{transition:none}}
 </style>

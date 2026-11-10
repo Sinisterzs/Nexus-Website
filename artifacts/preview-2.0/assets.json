@@ -1,0 +1,98 @@
+[
+  {
+    "path": "/screenshots/nexus-cyber.png",
+    "status": 200,
+    "type": "image/png",
+    "bytes": 154482
+  },
+  {
+    "path": "/screenshots/nexus-dark.png",
+    "status": 200,
+    "type": "image/png",
+    "bytes": 154699
+  },
+  {
+    "path": "/screenshots/nexus-home.png",
+    "status": 200,
+    "type": "image/png",
+    "bytes": 154699
+  },
+  {
+    "path": "/screenshots/nexus-messages.png",
+    "status": 200,
+    "type": "image/png",
+    "bytes": 101686
+  },
+  {
+    "path": "/screenshots/nexus-midnight.png",
+    "status": 200,
+    "type": "image/png",
+    "bytes": 159775
+  },
+  {
+    "path": "/screenshots/nexus-settings.png",
+    "status": 200,
+    "type": "image/png",
+    "bytes": 140022
+  },
+  {
+    "path": "/screenshots/optimized/nexus-cyber-1920.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 87590
+  },
+  {
+    "path": "/screenshots/optimized/nexus-cyber-960.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 20994
+  },
+  {
+    "path": "/screenshots/optimized/nexus-home-1920.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 88314
+  },
+  {
+    "path": "/screenshots/optimized/nexus-home-960.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 20162
+  },
+  {
+    "path": "/screenshots/optimized/nexus-messages-1920.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 56262
+  },
+  {
+    "path": "/screenshots/optimized/nexus-messages-960.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 13434
+  },
+  {
+    "path": "/screenshots/optimized/nexus-midnight-1920.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 89698
+  },
+  {
+    "path": "/screenshots/optimized/nexus-midnight-960.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 20802
+  },
+  {
+    "path": "/screenshots/optimized/nexus-settings-1920.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 79736
+  },
+  {
+    "path": "/screenshots/optimized/nexus-settings-960.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 19208
+  }
+]

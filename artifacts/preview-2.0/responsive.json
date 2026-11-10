@@ -1,0 +1,38 @@
+[
+  {
+    "client": 345,
+    "fit": "contain",
+    "scroll": 345,
+    "width": 360
+  },
+  {
+    "client": 375,
+    "fit": "contain",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "client": 753,
+    "fit": "contain",
+    "scroll": 753,
+    "width": 768
+  },
+  {
+    "client": 1009,
+    "fit": "contain",
+    "scroll": 1009,
+    "width": 1024
+  },
+  {
+    "client": 1425,
+    "fit": "contain",
+    "scroll": 1425,
+    "width": 1440
+  },
+  {
+    "client": 1905,
+    "fit": "contain",
+    "scroll": 1905,
+    "width": 1920
+  }
+]

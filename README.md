@@ -31,15 +31,15 @@ Astro 7.4.8, Svelte 5.57.3, integração Svelte 9.1.2, TypeScript 6.0.3, Anime.j
 src/config/releases.ts        versão Stable e todos os links de distribuição
 src/config/screenshots.ts     quatro slots para capturas reais
 src/components/layout/        header desktop/mobile
-src/components/sections/      recursos e galeria condicional de capturas
-src/components/interactive/   demonstração ilustrativa em Svelte
+src/components/sections/      recursos da landing page
+src/components/interactive/   apresentação real e interativa em Svelte
 src/components/visual/        Signal Core e fallback CSS
 src/layouts/Base.astro        SEO, fontes e documento
 src/lib/                      animação, rolagem e WebGL
 src/pages/                    landing, robots e sitemap estáticos
 src/styles/                   tokens, fontes, layout e polimento v1.1
 public/assets/og.png           Open Graph 1200 × 630
-public/assets/screenshots/    pasta reservada a capturas autorizadas
+public/screenshots/           capturas reais e derivados WebP
 public/assets/licenses/       licenças SIL OFL das fontes
 scripts/                      validações e servidor local de QA
 tests/                       regressões de distribuição e preparação de publicação
@@ -62,13 +62,13 @@ node scripts/check-links.mjs
 
 Ela usa HEAD (não baixa o instalador), registra resultados em `artifacts/links.json` e falha se algum link não responder com sucesso. Na validação v1.1, GitHub, release Stable, instalador e histórico de releases responderam HTTP 200.
 
-## Capturas reais e demonstração
+## Capturas reais — Preview 2.0
 
-As quatro telas reais (Home, Mensagens, Chamada e Personalização) ainda não estão no projeto. Não foram fabricadas capturas. Coloque arquivos autorizados em `public/assets/screenshots/` e preencha o campo `asset` correspondente em `src/config/screenshots.ts` com caminho, largura e altura reais. Leia o README da pasta.
+A seção Aplicativo usa os PNGs reais de `public/screenshots/`, com os quatro painéis reais: Home, Mensagens, Chamadas e Configurações. Os três temas alternam as capturas reais da Home; as outras telas preservam suas cores originais. A prévia tem navegação por abas com setas, Home/End, foco visível e movimento reduzido, além de links aos PNGs em tamanho original.
 
-Itens com `asset:null` não são renderizados; quando disponíveis, aparecem dentro da seção Aplicativo com proporção preservada, lazy loading, borda discreta e sombra suave. Não há uma seção vazia ou carrossel fictício.
+As sete capturas disponíveis têm 1920 × 1045 px. WebP desktop lossless preserva todos os pixels; variantes de 960px atendem telas menores. A proporção da moldura é reservada, as imagens não são cortadas e apenas a tela selecionada é montada, com lazy loading. O relatório de verificação e screenshots estão em `artifacts/preview-2.0/QA.md`.
 
-`AppPreview.svelte` permanece como **demonstração ilustrativa**, com contatos fictícios, três temas e abas Home, Mensagens e Personalização. A galeria real é complementar e não remove o mockup.
+Para atualizar imagens, consulte `public/screenshots/README.md` e `src/config/screenshots.ts`; regenere derivados com `node scripts/optimize-screenshots.mjs`. A antiga galeria paralela e o mockup ilustrativo foram removidos desta seção. A landing page restante foi preservada.
 
 ## Motion e acessibilidade
 
@@ -96,5 +96,5 @@ Referência: https://developers.cloudflare.com/pages/framework-guides/deploy-an-
 
 Veja `artifacts/v1.1/QA.md` para os testes executados, screenshots, métricas de arquivos e limites da verificação. O servidor opcional `node scripts/qa-server.mjs` serve exclusivamente o build local em `127.0.0.1:4323`; `/qa/reduced`, `/qa/no-webgl` e `/qa/lost` são condições controladas de teste. Esse servidor e suas injeções nunca são emitidos em `dist/`.
 
-Pendências antes da publicação: definir `SITE_URL` real e adicionar capturas autorizadas quando disponíveis. Não há medição Lighthouse/Core Web Vitals de produção, teste em hardware físico com GPU integrada nem alteração da aceleração gráfica do navegador. O cenário reduced-motion da automação simula `matchMedia`; não altera a preferência do sistema operacional. A perda de contexto foi provocada pela extensão WebGL real do navegador.
+A publicação existente não é alterada automaticamente. O Preview 2.0 inclui a captura real de Chamadas. Preserve o `SITE_URL` configurado na Cloudflare. Não há medição Lighthouse/Core Web Vitals de produção, teste em hardware físico com GPU integrada nem alteração da aceleração gráfica do navegador. O cenário reduced-motion da automação simula `matchMedia`; não altera a preferência do sistema operacional. A perda de contexto foi provocada pela extensão WebGL real do navegador.
 

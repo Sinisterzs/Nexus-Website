@@ -4,7 +4,6 @@ import Header from '../components/layout/Header.astro';
 import SignalCore from '../components/visual/SignalCore.astro';
 import Features from '../components/sections/Features.astro';
 import AppPreview from '../components/interactive/AppPreview.svelte';
-import Screenshots from '../components/sections/Screenshots.astro';
 import {release} from '../config/releases';
 ---
 <Base>
@@ -17,7 +16,7 @@ import {release} from '../config/releases';
     </section>
     <div class="principles"><div class="wrap"><span>CONVERSE SEM BARREIRAS</span><i>✳</i><span>COMPARTILHE SEU MUNDO</span><i>✳</i><span>SEJA VOCÊ MESMO</span><i>✳</i><span>ENCONTRE SEU ESPAÇO</span></div></div>
     <Features />
-    <section id="aplicativo" class="app-section section"><div class="wrap"><div class="section-top"><span class="eyebrow">02 / NEXUS UI 2.0</span><span class="section-index">UM ESPAÇO QUE PARECE SEU.</span></div><div class="section-heading"><h2>Familiar no primeiro clique.<br/><span>Seu em cada detalhe.</span></h2><p>Uma interface que dá espaço ao que importa.<br/>Escolha um tema. Sinta a diferença.</p></div><div data-reveal><AppPreview client:visible /></div><Screenshots /></div></section>
+    <section id="aplicativo" class="app-section section"><div class="wrap"><div class="section-top"><span class="eyebrow">02 / NEXUS UI 2.0</span><span class="section-index">UM ESPAÇO QUE PARECE SEU.</span></div><div class="section-heading"><h2>Familiar no primeiro clique.<br/><span>Seu em cada detalhe.</span></h2><p>Uma interface que dá espaço ao que importa.<br/>Explore o aplicativo e encontre seu tema.</p></div><div data-reveal><AppPreview client:visible /></div></div></section>
     <section id="tecnologia" class="section tech-section wrap"><div class="tech-intro"><span class="eyebrow">03 / POR TRÁS DA EXPERIÊNCIA</span><h2>Engenharia sólida.<br/><span>Conexão natural.</span></h2><p>A tecnologia cuida dos detalhes.<br/>Você cuida da conversa.</p><a href={release.repository} class="text-link" target="_blank" rel="noreferrer">Conheça o projeto no GitHub <span>↗</span></a></div><div class="tech-list">{[['RUST + TAURI 2','Feito para o desktop.','Uma base nativa para uma experiência dedicada ao Windows.'],['WEBRTC','De uma pessoa para outra.','Voz e compartilhamento de tela com conexão P2P.'],['SQLITE','Seu histórico, por perto.','Armazenamento local para suas conversas.'],['ATUALIZAÇÕES ASSINADAS','Evolução com integridade.','Assinaturas para verificar a origem das atualizações.']].map(([tag,title,desc],i)=><article data-reveal><span class="tech-number">0{i+1}</span><div><span class="tech-tag">{tag}</span><h3>{title}</h3><p>{desc}</p></div><span class="tech-plus" aria-hidden="true">+</span></article>)}</div></section>
     <section id="download" class="download-section"><div class="download-lines" aria-hidden="true"></div><div class="wrap download-inner"><span class="eyebrow"><i></i> SEU PRÓXIMO PONTO DE ENCONTRO</span><h2>PRONTO PARA<br/>SE <span>CONECTAR?</span></h2><p>Seu espaço está aqui. A próxima conversa também.</p><a class="button primary" href={release.installer}>Baixar NEXUS para Windows <span>↗</span></a><div class="download-details">v{release.version} {release.channel} <span>·</span> Windows {release.architecture} <span>·</span> <a href={release.latest}>Ver release oficial ↗</a></div></div></section>
   </main>

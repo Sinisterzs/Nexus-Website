@@ -1,0 +1,20 @@
+[
+  {
+    "loaded": true,
+    "overflow": false,
+    "src": "http://127.0.0.1:4323/screenshots/optimized/nexus-home-1920.webp",
+    "theme": "NEXUS Dark✓"
+  },
+  {
+    "loaded": true,
+    "overflow": false,
+    "src": "http://127.0.0.1:4323/screenshots/optimized/nexus-midnight-960.webp",
+    "theme": "Midnight Black✓"
+  },
+  {
+    "loaded": true,
+    "overflow": false,
+    "src": "http://127.0.0.1:4323/screenshots/optimized/nexus-cyber-960.webp",
+    "theme": "Cyber Slate✓"
+  }
+]

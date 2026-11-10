@@ -1,0 +1,41 @@
+[
+  {
+    "images": [
+      {
+        "loaded": true,
+        "src": "http://127.0.0.1:4323/screenshots/optimized/nexus-home-1920.webp"
+      }
+    ],
+    "panel": "01Home",
+    "pending": false,
+    "stageHeight": 713.53125
+  },
+  {
+    "images": [
+      {
+        "loaded": true,
+        "src": "http://127.0.0.1:4323/screenshots/optimized/nexus-messages-1920.webp"
+      }
+    ],
+    "panel": "02Mensagens",
+    "pending": false,
+    "stageHeight": 713.53125
+  },
+  {
+    "images": [],
+    "panel": "03Chamadas",
+    "pending": true,
+    "stageHeight": 713.53125
+  },
+  {
+    "images": [
+      {
+        "loaded": true,
+        "src": "http://127.0.0.1:4323/screenshots/optimized/nexus-settings-1920.webp"
+      }
+    ],
+    "panel": "04Configurações",
+    "pending": false,
+    "stageHeight": 713.53125
+  }
+]
